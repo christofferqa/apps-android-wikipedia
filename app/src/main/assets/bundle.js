@@ -580,7 +580,7 @@ bridge.registerListener( "requestSectionData", function () {
  * or -1 if the page is scrolled all the way to the bottom (i.e. native bottom content should be shown).
  */
 function getCurrentSection() {
-    var sectionHeaders = document.getElementsByClassName( "pagelib_edit_section_header" );
+    var sectionHeaders = document.querySelectorAll( ".section_heading, .pagelib_edit_section_header" );
     var bottomDiv = document.getElementById( "bottom_stopper" );
     var topCutoff = window.scrollY + ( document.documentElement.clientHeight / 2 );
     if (topCutoff > bottomDiv.offsetTop) {
@@ -601,12 +601,8 @@ function getCurrentSection() {
         }
     }
 
-    return curClosest.getAttribute( "data-id" );
+    return curClosest ? curClosest.getAttribute( "data-id" ) : 0;
 }
-
-bridge.registerListener( "requestCurrentSection", function() {
-    bridge.sendMessage( "currentSectionResponse", { sectionID: getCurrentSection() } );
-} );
 
 },{"./bridge":2,"./theme":9,"./transformer":10,"wikimedia-page-library":19}],9:[function(require,module,exports){
 var bridge = require("./bridge");
@@ -622,6 +618,10 @@ function applyTheme( payload ) {
         case 2:
             theme = pagelib.ThemeTransform.THEME.BLACK;
             window.isDarkMode = true;
+            break;
+        case 3:
+            theme = pagelib.ThemeTransform.THEME.SEPIA;
+            window.isDarkMode = false;
             break;
         default:
             theme = pagelib.ThemeTransform.THEME.DEFAULT;

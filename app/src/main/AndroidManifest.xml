@@ -28,7 +28,7 @@
         android:name="android.permission.MANAGE_ACCOUNTS"
         android:maxSdkVersion="22" />
 
-    <!-- For notifications, e.g. User account notices, Wikipedia Zero, etc. -->
+    <!-- For notifications, e.g. User account notices, etc. -->
     <uses-permission android:name="android.permission.VIBRATE"/>
 
     <!-- For being able to receive notifications upon boot -->
@@ -81,16 +81,6 @@
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
                 <category android:name="android.intent.category.MULTIWINDOW_LAUNCHER" />
-            </intent-filter>
-            <intent-filter android:label="@string/intent_share_search_label">
-                <action android:name="android.intent.action.SEND" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <data android:mimeType="text/plain" />
-            </intent-filter>
-            <intent-filter android:label="@string/intent_share_search_label">
-                <action android:name="android.intent.action.PROCESS_TEXT" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <data android:mimeType="text/plain" />
             </intent-filter>
         </activity>
         <activity
@@ -198,6 +188,21 @@
         <activity
             android:name=".descriptions.DescriptionEditActivity"
             android:windowSoftInputMode="adjustResize" />
+
+        <activity
+            android:name=".search.SearchActivity"
+            android:windowSoftInputMode="adjustResize">
+            <intent-filter android:label="@string/intent_share_search_label">
+                <action android:name="android.intent.action.SEND" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="text/plain" />
+            </intent-filter>
+            <intent-filter android:label="@string/intent_share_search_label">
+                <action android:name="android.intent.action.PROCESS_TEXT" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="text/plain" />
+            </intent-filter>
+        </activity>
 
         <activity
             android:name=".descriptions.DescriptionEditSuccessActivity"

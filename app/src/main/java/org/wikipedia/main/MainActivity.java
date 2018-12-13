@@ -38,6 +38,8 @@ import org.wikipedia.views.WikiDrawerLayout;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.reactivex.Completable;
+import io.reactivex.schedulers.Schedulers;
 
 import static org.wikipedia.Constants.ACTIVITY_REQUEST_INITIAL_ONBOARDING;
 
@@ -60,7 +62,9 @@ public class MainActivity extends SingleFragmentActivity<MainFragment>
         super.onCreate(savedInstanceState);
         ButterKnife.bind(this);
         AnimationUtil.setSharedElementTransitions(this);
-        new AppShortcuts().init();
+
+        Completable.fromAction(() -> AppShortcuts.setShortcuts(getApplicationContext()))
+                .subscribeOn(Schedulers.newThread()).subscribe();
 
         if (Prefs.isInitialOnboardingEnabled() && savedInstanceState == null) {
             // Updating preference so the search multilingual tooltip
@@ -124,21 +128,6 @@ public class MainActivity extends SingleFragmentActivity<MainFragment>
         }
         shouldShowMainDrawer(!controlNavTabInFragment);
         getFragment().requestUpdateToolbarElevation();
-    }
-
-    @Override
-    public void onSearchOpen() {
-        getToolbar().setVisibility(View.GONE);
-        shouldShowMainDrawer(false);
-    }
-
-    @Override
-    public void onSearchClose(boolean shouldFinishActivity) {
-        getToolbar().setVisibility(View.VISIBLE);
-        shouldShowMainDrawer(true);
-        if (shouldFinishActivity) {
-            finish();
-        }
     }
 
     @Override

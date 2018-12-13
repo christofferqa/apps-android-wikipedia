@@ -2,6 +2,7 @@ package org.wikipedia.settings;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceFragmentCompat;
 import android.support.v7.preference.TwoStatePreference;
@@ -11,14 +12,22 @@ import org.wikipedia.R;
 import org.wikipedia.WikipediaApp;
 import org.wikipedia.crash.RemoteLogException;
 import org.wikipedia.dataclient.WikiSite;
+import org.wikipedia.editactionfeed.provider.MissingDescriptionProvider;
+import org.wikipedia.history.HistoryEntry;
+import org.wikipedia.page.PageActivity;
 import org.wikipedia.page.PageTitle;
 import org.wikipedia.readinglist.database.ReadingList;
 import org.wikipedia.readinglist.database.ReadingListDbHelper;
 import org.wikipedia.readinglist.database.ReadingListPage;
+import org.wikipedia.util.StringUtil;
 import org.wikipedia.util.log.L;
+import org.wikipedia.views.DialogTitleWithImage;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 
 class DeveloperSettingsPreferenceLoader extends BasePreferenceLoader {
     private static final String TEXT_OF_TEST_READING_LIST = "Test reading list";
@@ -155,6 +164,60 @@ class DeveloperSettingsPreferenceLoader extends BasePreferenceLoader {
                         pages.add(new ReadingListPage(pageTitle));
                     }
                     ReadingListDbHelper.instance().addPagesToList(ReadingListDbHelper.instance().getDefaultList(), pages, true);
+                    return true;
+                });
+
+        findPreference(context.getString(R.string.preference_key_missing_description_test))
+                .setOnPreferenceClickListener(preference -> {
+                    MissingDescriptionProvider.INSTANCE.getNextArticleWithMissingDescription(WikipediaApp.getInstance().getWikiSite())
+                            .subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe(summary -> new AlertDialog.Builder(getActivity())
+                                            .setTitle(StringUtil.fromHtml(summary.getDisplayTitle()))
+                                            .setMessage(StringUtil.fromHtml(summary.getExtract()))
+                                            .setPositiveButton("Go", (dialog, which) -> {
+                                                PageTitle title = new PageTitle(summary.getNormalizedTitle(), WikipediaApp.getInstance().getWikiSite());
+                                                getActivity().startActivity(PageActivity.newIntentForNewTab(getActivity(), new HistoryEntry(title, HistoryEntry.SOURCE_INTERNAL_LINK), title));
+                                            })
+                                            .setNegativeButton(android.R.string.cancel, null)
+                                            .show(),
+                                    throwable -> new AlertDialog.Builder(getActivity())
+                                            .setMessage(throwable.getMessage())
+                                            .setPositiveButton(android.R.string.ok, null)
+                                            .show());
+                    return true;
+                });
+
+        findPreference(context.getString(R.string.preference_key_missing_description_test2))
+                .setOnPreferenceClickListener(preference -> {
+                    MissingDescriptionProvider.INSTANCE.getNextArticleWithMissingDescription(WikipediaApp.getInstance().getWikiSite(),
+                            WikipediaApp.getInstance().language().getAppLanguageCodes().get(1), true)
+                            .subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe(summary -> new AlertDialog.Builder(getActivity())
+                                            .setTitle(StringUtil.fromHtml(summary.getDisplayTitle()))
+                                            .setMessage(StringUtil.fromHtml(summary.getDescription()))
+                                            .setPositiveButton("Go", (dialog, which) -> {
+                                                PageTitle title = new PageTitle(summary.getNormalizedTitle(), WikipediaApp.getInstance().getWikiSite());
+                                                getActivity().startActivity(PageActivity.newIntentForNewTab(getActivity(), new HistoryEntry(title, HistoryEntry.SOURCE_INTERNAL_LINK), title));
+                                            })
+                                            .setNegativeButton(android.R.string.cancel, null)
+                                            .show(),
+                                    throwable -> new AlertDialog.Builder(getActivity())
+                                            .setMessage(throwable.getMessage())
+                                            .setPositiveButton(android.R.string.ok, null)
+                                            .show());
+                    return true;
+                });
+
+        findPreference(context.getString(R.string.preference_key_dialog_with_image_test))
+                .setOnPreferenceClickListener(preference -> {
+                    new AlertDialog.Builder(getActivity())
+                            .setCustomTitle(new DialogTitleWithImage(getActivity(), R.string.about_activity_title, R.drawable.lead_default))
+                            .setMessage(R.string.description_edit_help_tips_description)
+                            .setPositiveButton(android.R.string.ok, null)
+                            .setNegativeButton(android.R.string.cancel, null)
+                            .show();
                     return true;
                 });
     }

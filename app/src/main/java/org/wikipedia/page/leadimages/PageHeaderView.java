@@ -127,8 +127,12 @@ public class PageHeaderView extends LinearLayoutOverWebView implements Observabl
         @Override
         public void onImageLoaded(final int bmpHeight, @Nullable final PointF faceLocation, @ColorInt final int mainColor) {
             if (isAttachedToWindow() && faceLocation != null) {
-                image.getHierarchy().setActualImageFocusPoint(faceLocation);
-                updateScroll();
+                image.post(() -> {
+                    if (isAttachedToWindow()) {
+                        image.getHierarchy().setActualImageFocusPoint(faceLocation);
+                        updateScroll();
+                    }
+                });
             }
         }
 

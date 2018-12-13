@@ -17,7 +17,6 @@ import org.wikipedia.edit.preview.EditPreview;
 import org.wikipedia.login.LoginClient;
 import org.wikipedia.search.PrefixSearchResponse;
 import org.wikipedia.wikidata.Entities;
-import org.wikipedia.zero.ZeroConfig;
 
 import io.reactivex.Observable;
 import retrofit2.Call;
@@ -168,8 +167,9 @@ public interface Service {
     @GET(MW_API_PREFIX + "action=query&meta=siteinfo")
     @NonNull Observable<MwQueryResponse> getSiteInfo();
 
-    @GET(MW_API_PREFIX + "action=zeroconfig&type=message")
-    @NonNull Observable<ZeroConfig> getZeroConfig(@NonNull @Query("agent") String userAgent);
+    @Headers("Cache-Control: no-cache")
+    @GET(MW_API_PREFIX + "action=query&generator=random&redirects=1&grnnamespace=0&grnlimit=50&prop=pageprops|description")
+    @NonNull Observable<MwQueryResponse> getRandomWithPageProps();
 
 
     // ------- CSRF, Login, and Create Account -------
@@ -284,6 +284,9 @@ public interface Service {
     @GET(MW_API_PREFIX + "action=wbgetentities&props=labels&languagefallback=1")
     @NonNull Call<Entities> getWikidataLabels(@Query("ids") @NonNull String idList,
                                               @Query("languages") @NonNull String langList);
+
+    @GET(MW_API_PREFIX + "action=wbgetentities&props=descriptions|labels|sitelinks")
+    @NonNull Observable<Entities> getWikidataLabelsAndDescriptions(@Query("ids") @NonNull String idList);
 
     @Headers("Cache-Control: no-cache")
     @POST(MW_API_PREFIX + "action=wbsetdescription")

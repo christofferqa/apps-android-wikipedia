@@ -31,8 +31,7 @@
   <string name="content_license_html">Բովանդակությունը հասանելի է &lt;a href=\"%1$s\"&gt;CC BY-SA 3.0&lt;/a&gt; թույլատրագրի ներքո, եթե այլ բան նշված չէ</string>
   <string name="edit_save_action_license_logged_in">Սեղմելով «Հիշել էջը»՝ Դուք համաձայնվում եք &lt;a href=\"%1$s\"&gt;օգտագործման պայմաններին&lt;/a&gt; և Ձեր ներդրումները անվերադարձ &lt;a href=\"%2$s\"&gt;CC BY-SA 3.0&lt;/a&gt; արտոնագրի ներքո հրապարակելուն։</string>
   <string name="preference_title_language">Վիքիպեդիայի լեզուն</string>
-  <string name="preference_languages_filter_hint">Որոնել</string>
-  <string name="langlinks_filter_hint">Որոնել</string>
+    <string name="langlinks_filter_hint">Որոնել</string>
   <string name="langlinks_empty">Այս էջը այլ լեզվով հասանելի չէ։</string>
   <string name="langlinks_no_match">Ձեր հարցումով լեզուներ չեն գտնվել:</string>
   <string name="langlinks_activity_title">Այլ լեզուներ</string>
@@ -67,9 +66,7 @@
   <string name="create_account_next">Հաջորդ</string>
   <string name="create_account_button">Ստեղծել մասնակցային հաշիվ</string>
   <string name="preferences_general_heading">Ընդհանուր</string>
-  <string name="zero_charged_verbiage">Վիքիպեդիա Զրոն անջատված է</string>
-  <string name="zero_wikipedia_zero_heading">Վիքիպեդիա Զրո</string>
-  <string name="create_account_account_created_toast">Հաշիվը ստեղծված է</string>
+    <string name="create_account_account_created_toast">Հաշիվը ստեղծված է</string>
   <string name="about_contributors_heading" fuzzy="true">հեղինակներ</string>
   <string name="about_translators_heading" fuzzy="true">թարգմանիչներ</string>
   <string name="about_translators_translatewiki">Այս ծրագիրը թարգմանվել է կամավոր թարգմանիչների կողմից՝ &lt;a href=\"https://translatewiki.net\"&gt;translatewiki.net&lt;/a&gt; կայքում։</string>

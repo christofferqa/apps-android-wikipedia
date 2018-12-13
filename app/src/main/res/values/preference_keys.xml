@@ -2,9 +2,6 @@
 <resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
     <string name="preference_key_language">content_language</string>
     <string name="preference_key_cookie_map">cookie_map</string>
-    <string name="preference_key_zero_interstitial">zero_warn_when_leaving</string>
-    <string name="preference_key_zero_config_hash">zeroConfigHash</string>
-    <string name="preference_key_zero_tutorial_enabled">zeroTutorialEnabled</string>
     <string name="preference_key_remote_config">remote_config</string>
     <string name="preference_key_eventlogging_opt_in">eventlogging_opt_in</string>
     <string name="preference_key_reading_app_install_id">readingAppInstallID</string>
@@ -54,6 +51,9 @@
     <string name="preference_key_description_edit_tutorial_enabled">descriptionEditTutorialEnabled</string>
     <string name="preference_key_last_description_edit_time">lastDescriptionEditTime</string>
     <string name="preference_key_total_anon_descriptions_edited">totalAnonDescriptionsEdited</string>
+    <string name="preference_key_missing_description_test">findArticleWithMissingDescription</string>
+    <string name="preference_key_missing_description_test2">findArticleWithMissingSecondLangDescription</string>
+    <string name="preference_key_dialog_with_image_test">showDialogWithTitleAndImage</string>
     <string name="preference_category_sync">syncSettings</string>
     <string name="preference_category_experimental">experimentalSettings</string>
     <string name="preference_key_sync_reading_lists">syncReadingLists</string>

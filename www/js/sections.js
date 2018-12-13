@@ -359,7 +359,7 @@ bridge.registerListener( "requestSectionData", function () {
  * or -1 if the page is scrolled all the way to the bottom (i.e. native bottom content should be shown).
  */
 function getCurrentSection() {
-    var sectionHeaders = document.getElementsByClassName( "pagelib_edit_section_header" );
+    var sectionHeaders = document.querySelectorAll( ".section_heading, .pagelib_edit_section_header" );
     var bottomDiv = document.getElementById( "bottom_stopper" );
     var topCutoff = window.scrollY + ( document.documentElement.clientHeight / 2 );
     if (topCutoff > bottomDiv.offsetTop) {
@@ -380,9 +380,5 @@ function getCurrentSection() {
         }
     }
 
-    return curClosest.getAttribute( "data-id" );
+    return curClosest ? curClosest.getAttribute( "data-id" ) : 0;
 }
-
-bridge.registerListener( "requestCurrentSection", function() {
-    bridge.sendMessage( "currentSectionResponse", { sectionID: getCurrentSection() } );
-} );

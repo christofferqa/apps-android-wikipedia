@@ -2,6 +2,7 @@ package org.wikipedia.search;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -20,20 +21,24 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import org.wikipedia.BackPressedHandler;
+import org.wikipedia.Constants;
 import org.wikipedia.R;
 import org.wikipedia.WikipediaApp;
-import org.wikipedia.activity.FragmentUtil;
+import org.wikipedia.analytics.IntentFunnel;
 import org.wikipedia.analytics.SearchFunnel;
 import org.wikipedia.database.contract.SearchHistoryContract;
 import org.wikipedia.history.HistoryEntry;
 import org.wikipedia.language.LanguageSettingsInvokeSource;
+import org.wikipedia.page.ExclusiveBottomSheetPresenter;
+import org.wikipedia.page.PageActivity;
 import org.wikipedia.page.PageTitle;
 import org.wikipedia.readinglist.AddToReadingListDialog;
 import org.wikipedia.settings.Prefs;
 import org.wikipedia.settings.languages.WikipediaLanguagesActivity;
+import org.wikipedia.util.ClipboardUtil;
 import org.wikipedia.util.DeviceUtil;
 import org.wikipedia.util.FeedbackUtil;
+import org.wikipedia.util.ShareUtil;
 import org.wikipedia.util.log.L;
 import org.wikipedia.views.CabSearchView;
 import org.wikipedia.views.LanguageScrollView;
@@ -54,18 +59,8 @@ import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.wikipedia.Constants.ACTIVITY_REQUEST_ADD_A_LANGUAGE_FROM_SEARCH;
 import static org.wikipedia.settings.languages.WikipediaLanguagesFragment.ACTIVITY_RESULT_LANG_POSITION_DATA;
 
-public class SearchFragment extends Fragment implements BackPressedHandler,
-        SearchResultsFragment.Callback, RecentSearchesFragment.Callback, LanguageScrollView.Callback {
-
-    public interface Callback {
-        void onSearchSelectPage(@NonNull HistoryEntry entry, boolean inNewTab);
-        void onSearchOpen();
-        void onSearchClose(boolean launchedFromIntent);
-        void onSearchResultCopyLink(@NonNull PageTitle title);
-        void onSearchResultAddToList(@NonNull PageTitle title,
-                                     @NonNull AddToReadingListDialog.InvokeSource source);
-        void onSearchResultShareLink(@NonNull PageTitle title);
-    }
+public class SearchFragment extends Fragment implements SearchResultsFragment.Callback,
+        RecentSearchesFragment.Callback, LanguageScrollView.Callback {
 
     private static final String ARG_INVOKE_SOURCE = "invokeSource";
     private static final String ARG_QUERY = "lastQuery";
@@ -73,7 +68,6 @@ public class SearchFragment extends Fragment implements BackPressedHandler,
     private static final int PANEL_RECENT_SEARCHES = 0;
     private static final int PANEL_SEARCH_RESULTS = 1;
 
-    @BindView(R.id.search_container) View searchContainer;
     @BindView(R.id.search_toolbar) Toolbar toolbar;
     @BindView(R.id.search_cab_view) CabSearchView searchView;
     @BindView(R.id.search_progress_bar) ProgressBar progressBar;
@@ -90,8 +84,9 @@ public class SearchFragment extends Fragment implements BackPressedHandler,
     private SearchInvokeSource invokeSource;
     private String searchLanguageCode;
     private String tempLangCodeHolder;
-    private boolean languageChanged = false;
     private boolean langBtnClicked = false;
+    public static final int RESULT_LANG_CHANGED = 1;
+    public static final int RESULT_LANG_CONSISTENT = 2;
     public static final int LANG_BUTTON_TEXT_SIZE_LARGER = 12;
     public static final int LANG_BUTTON_TEXT_SIZE_SMALLER = 8;
     /**
@@ -105,6 +100,7 @@ public class SearchFragment extends Fragment implements BackPressedHandler,
      */
     @Nullable private String query;
 
+    private ExclusiveBottomSheetPresenter bottomSheetPresenter = new ExclusiveBottomSheetPresenter();
     private RecentSearchesFragment recentSearchesFragment;
     private SearchResultsFragment searchResultsFragment;
 
@@ -138,12 +134,12 @@ public class SearchFragment extends Fragment implements BackPressedHandler,
         }
     };
 
-    @NonNull public static SearchFragment newInstance(@NonNull SearchInvokeSource source,
+    @NonNull public static SearchFragment newInstance(int source,
                                                       @Nullable String query) {
         SearchFragment fragment = new SearchFragment();
 
         Bundle args = new Bundle();
-        args.putInt(ARG_INVOKE_SOURCE, source.code());
+        args.putInt(ARG_INVOKE_SOURCE, source);
         args.putString(ARG_QUERY, query);
 
         fragment.setArguments(args);
@@ -155,9 +151,12 @@ public class SearchFragment extends Fragment implements BackPressedHandler,
         super.onCreate(savedInstanceState);
         app = WikipediaApp.getInstance();
 
-        invokeSource = SearchInvokeSource.of(getArguments().getInt(ARG_INVOKE_SOURCE));
-        query = getArguments().getString(ARG_QUERY);
+        if (savedInstanceState == null) {
+            handleIntent(requireActivity().getIntent());
+        }
 
+        invokeSource = SearchInvokeSource.of(getArguments().getInt(ARG_INVOKE_SOURCE, SearchInvokeSource.TOOLBAR.code()));
+        query = getArguments().getString(ARG_QUERY);
         funnel = new SearchFunnel(app, invokeSource);
     }
 
@@ -180,7 +179,7 @@ public class SearchFragment extends Fragment implements BackPressedHandler,
         searchResultsFragment = (SearchResultsFragment)childFragmentManager.findFragmentById(
                 R.id.fragment_search_results);
 
-        toolbar.setNavigationOnClickListener((v) -> onBackPressed());
+        toolbar.setNavigationOnClickListener((v) -> requireActivity().finish());
 
         initSearchView();
 
@@ -198,8 +197,8 @@ public class SearchFragment extends Fragment implements BackPressedHandler,
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == ACTIVITY_REQUEST_ADD_A_LANGUAGE_FROM_SEARCH) {
-            languageChanged = true;
             int position = 0;
+            requireActivity().setResult(RESULT_LANG_CHANGED);
             if (data != null && data.hasExtra(ACTIVITY_RESULT_LANG_POSITION_DATA)) {
                 position = data.getIntExtra(ACTIVITY_RESULT_LANG_POSITION_DATA, 0);
             } else if (app.language().getAppLanguageCodes().contains(searchLanguageCode)) {
@@ -207,6 +206,22 @@ public class SearchFragment extends Fragment implements BackPressedHandler,
             }
             setUpLanguageScroll(position);
             startSearch(query, true);
+        }
+    }
+
+    public void handleIntent(Intent intent) {
+        IntentFunnel intentFunnel = new IntentFunnel(WikipediaApp.getInstance());
+        if (Intent.ACTION_SEND.equals(intent.getAction())
+                && Constants.PLAIN_TEXT_MIME_TYPE.equals(intent.getType())) {
+            intentFunnel.logShareIntent();
+            getArguments().putString(ARG_QUERY, intent.getStringExtra(Intent.EXTRA_TEXT));
+            getArguments().putInt(ARG_INVOKE_SOURCE, SearchInvokeSource.INTENT_SHARE.code());
+        } else if (Intent.ACTION_PROCESS_TEXT.equals(intent.getAction())
+                && Constants.PLAIN_TEXT_MIME_TYPE.equals(intent.getType())
+                && Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            intentFunnel.logProcessTextIntent();
+            getArguments().putString(ARG_QUERY, intent.getStringExtra(Intent.EXTRA_PROCESS_TEXT));
+            getArguments().putInt(ARG_INVOKE_SOURCE, SearchInvokeSource.INTENT_PROCESS_TEXT.code());
         }
     }
 
@@ -241,6 +256,7 @@ public class SearchFragment extends Fragment implements BackPressedHandler,
         searchView.setOnQueryTextListener(null);
         unbinder.unbind();
         unbinder = null;
+        funnel.searchCancel(searchLanguageCode);
         super.onDestroyView();
     }
 
@@ -254,10 +270,6 @@ public class SearchFragment extends Fragment implements BackPressedHandler,
     @NonNull
     public SearchFunnel getFunnel() {
         return funnel;
-    }
-
-    public boolean isLaunchedFromIntent() {
-        return invokeSource.fromIntent();
     }
 
     @Override
@@ -280,29 +292,6 @@ public class SearchFragment extends Fragment implements BackPressedHandler,
         searchView.setQuery(text, false);
     }
 
-    /**
-     * Determine whether the Search fragment is currently active.
-     * @return Whether the Search fragment is active.
-     */
-    public boolean isSearchActive() {
-        return isSearchActive;
-    }
-
-    public boolean isLanguageChanged() {
-        return languageChanged;
-    }
-
-    @Override
-    public boolean onBackPressed() {
-        if (isSearchActive) {
-            // todo: activity or fragment transition
-            funnel.searchCancel(searchLanguageCode);
-            closeSearch();
-            return true;
-        }
-        return false;
-    }
-
     @Override
     public void navigateToTitle(@NonNull PageTitle title, boolean inNewTab, int position) {
         if (!isAdded()) {
@@ -310,36 +299,26 @@ public class SearchFragment extends Fragment implements BackPressedHandler,
         }
         funnel.searchClick(position, searchLanguageCode);
         HistoryEntry historyEntry = new HistoryEntry(title, HistoryEntry.SOURCE_SEARCH);
-        Callback callback = callback();
-        if (callback != null) {
-            callback.onSearchSelectPage(historyEntry, inNewTab);
-        }
+        startActivity(inNewTab ? PageActivity.newIntentForNewTab(requireContext(), historyEntry, historyEntry.getTitle())
+                : PageActivity.newIntentForCurrentTab(requireContext(), historyEntry, historyEntry.getTitle()));
         closeSearch();
     }
 
     @Override
     public void onSearchResultCopyLink(@NonNull PageTitle title) {
-        Callback callback = callback();
-        if (callback != null) {
-            callback.onSearchResultCopyLink(title);
-        }
+        ClipboardUtil.setPlainText(requireContext(), null, title.getCanonicalUri());
+        FeedbackUtil.showMessage(this, R.string.address_copied);
     }
 
     @Override
     public void onSearchResultAddToList(@NonNull PageTitle title,
                                         @NonNull AddToReadingListDialog.InvokeSource source) {
-        Callback callback = callback();
-        if (callback != null) {
-            callback.onSearchResultAddToList(title, source);
-        }
+        bottomSheetPresenter.show(getChildFragmentManager(), AddToReadingListDialog.newInstance(title, source));
     }
 
     @Override
     public void onSearchResultShareLink(@NonNull PageTitle title) {
-        Callback callback = callback();
-        if (callback != null) {
-            callback.onSearchResultShareLink(title);
-        }
+        ShareUtil.shareText(requireContext(), title);
     }
 
     @Override
@@ -399,13 +378,6 @@ public class SearchFragment extends Fragment implements BackPressedHandler,
         funnel = new SearchFunnel(app, invokeSource);
         funnel.searchStart();
         isSearchActive = true;
-        languageChanged = false;
-        Callback callback = callback();
-        if (callback != null) {
-            callback.onSearchOpen();
-        }
-        // show ourselves
-        ViewUtil.fadeIn(searchContainer);
 
         searchView.setIconified(false);
         searchView.requestFocusFromTouch();
@@ -419,13 +391,7 @@ public class SearchFragment extends Fragment implements BackPressedHandler,
 
     public void closeSearch() {
         isSearchActive = false;
-        // hide ourselves
-        ViewUtil.fadeOut(searchContainer);
         DeviceUtil.hideSoftKeyboard(getView());
-        Callback callback = callback();
-        if (callback != null) {
-            callback.onSearchClose(invokeSource.fromIntent());
-        }
         addRecentSearch(query);
     }
 
@@ -503,11 +469,6 @@ public class SearchFragment extends Fragment implements BackPressedHandler,
                     .subscribe(() -> recentSearchesFragment.updateList(),
                             L::e));
         }
-    }
-
-    @Nullable
-    private Callback callback() {
-        return FragmentUtil.getCallback(this, Callback.class);
     }
 
     @Override
