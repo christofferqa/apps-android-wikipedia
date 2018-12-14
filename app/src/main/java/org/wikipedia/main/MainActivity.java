@@ -34,13 +34,18 @@ import org.wikipedia.settings.SettingsActivity;
 import org.wikipedia.util.AnimationUtil;
 import org.wikipedia.util.DimenUtil;
 import org.wikipedia.util.FeedbackUtil;
+import org.wikipedia.util.ReleaseUtil;
 import org.wikipedia.views.WikiDrawerLayout;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import io.reactivex.Completable;
 import io.reactivex.schedulers.Schedulers;
 
+import static android.view.Gravity.START;
+import static android.view.View.GONE;
+import static android.view.View.VISIBLE;
 import static org.wikipedia.Constants.ACTIVITY_REQUEST_INITIAL_ONBOARDING;
 
 public class MainActivity extends SingleFragmentActivity<MainFragment>
@@ -49,7 +54,9 @@ public class MainActivity extends SingleFragmentActivity<MainFragment>
     @BindView(R.id.navigation_drawer) WikiDrawerLayout drawerLayout;
     @BindView(R.id.navigation_drawer_view) MainDrawerView drawerView;
     @BindView(R.id.single_fragment_toolbar) Toolbar toolbar;
-    @BindView(R.id.single_fragment_toolbar_wordmark) View wordMark;
+    @BindView(R.id.drawer_icon_layout) View drawerIconLayout;
+    @BindView(R.id.drawer_icon_dot) View drawerIconDot;
+    @BindView(R.id.hamburger_and_wordmark_layout) View hamburgerAndWordmarkLayout;
 
     private boolean controlNavTabInFragment;
 
@@ -88,11 +95,16 @@ public class MainActivity extends SingleFragmentActivity<MainFragment>
             public void onDrawerStateChanged(int newState) {
                 if (newState == DrawerLayout.STATE_DRAGGING || newState == DrawerLayout.STATE_SETTLING) {
                     drawerView.updateState();
+                    if (drawerIconDot.getVisibility() == VISIBLE) {
+                        Prefs.setShowActionFeedIndicator(false);
+                        setUpHomeMenuIcon();
+                    }
                 }
             }
         });
         drawerView.setCallback(new DrawerViewCallback());
         shouldShowMainDrawer(true);
+        setUpHomeMenuIcon();
     }
 
     @Override
@@ -115,19 +127,27 @@ public class MainActivity extends SingleFragmentActivity<MainFragment>
     @Override
     public void onTabChanged(@NonNull NavTab tab) {
         if (tab.equals(NavTab.EXPLORE)) {
-            getToolbarWordmark().setVisibility(View.VISIBLE);
+            hamburgerAndWordmarkLayout.setVisibility(VISIBLE);
             getSupportActionBar().setTitle("");
             controlNavTabInFragment = false;
         } else {
             if (tab.equals(NavTab.HISTORY) && getFragment().getCurrentFragment() != null) {
                 ((HistoryFragment) getFragment().getCurrentFragment()).refresh();
             }
-            getToolbarWordmark().setVisibility(View.GONE);
+            hamburgerAndWordmarkLayout.setVisibility(GONE);
             getSupportActionBar().setTitle(tab.text());
             controlNavTabInFragment = true;
         }
         shouldShowMainDrawer(!controlNavTabInFragment);
         getFragment().requestUpdateToolbarElevation();
+    }
+
+    void setUpHomeMenuIcon() {
+        drawerIconDot.setVisibility(AccountUtil.isLoggedIn() && Prefs.showActionFeedIndicator() && ReleaseUtil.isPreBetaRelease() ? VISIBLE : GONE);
+    }
+
+    @OnClick(R.id.drawer_icon_layout) void onDrawerOpenClicked() {
+        drawerLayout.openDrawer(START);
     }
 
     @Override
@@ -185,7 +205,7 @@ public class MainActivity extends SingleFragmentActivity<MainFragment>
     }
 
     public boolean isFloatingQueueEnabled() {
-        return getFragment().getFloatingQueueView().getVisibility() == View.VISIBLE;
+        return getFragment().getFloatingQueueView().getVisibility() == VISIBLE;
     }
 
     public View getFloatingQueueImageView() {
@@ -201,7 +221,6 @@ public class MainActivity extends SingleFragmentActivity<MainFragment>
     }
 
     public void shouldShowMainDrawer(boolean enabled) {
-        getSupportActionBar().setDisplayHomeAsUpEnabled(enabled);
         drawerLayout.setSlidingEnabled(enabled);
 
         if (enabled) {
@@ -209,12 +228,8 @@ public class MainActivity extends SingleFragmentActivity<MainFragment>
                     drawerLayout, toolbar,
                     R.string.main_drawer_open, R.string.main_drawer_close);
             drawerToggle.syncState();
-            getToolbar().setNavigationIcon(R.drawable.ic_menu_themed_24dp);
+            getToolbar().setNavigationIcon(null);
         }
-    }
-
-    protected View getToolbarWordmark() {
-        return wordMark;
     }
 
     protected void setToolbarElevationDefault() {
@@ -263,6 +278,13 @@ public class MainActivity extends SingleFragmentActivity<MainFragment>
                 ((FeedFragment) getFragment().getCurrentFragment()).showConfigureActivity(-1);
             }
             closeMainDrawer();
+        }
+
+        @Override
+        public void editingTasksClick() {
+            Prefs.setShowEditMenuOptionIndicator(false);
+            drawerView.maybeShowIndicatorDots();
+            //Todo: Create activity for editing - part of T209539
         }
 
         @Override public void aboutClick() {
