@@ -49,6 +49,7 @@ import org.wikipedia.dataclient.okhttp.OkHttpWebViewClient;
 import org.wikipedia.descriptions.DescriptionEditActivity;
 import org.wikipedia.descriptions.DescriptionEditTutorialActivity;
 import org.wikipedia.edit.EditHandler;
+import org.wikipedia.editactionfeed.AddTitleDescriptionsActivity;
 import org.wikipedia.gallery.GalleryActivity;
 import org.wikipedia.history.HistoryEntry;
 import org.wikipedia.history.UpdateHistoryTask;
@@ -150,6 +151,7 @@ public class PageFragment extends Fragment implements BackPressedHandler {
     private WikiPageErrorView errorView;
     private PageActionTabLayout tabLayout;
     private ToCHandler tocHandler;
+    private WebViewScrollTriggerListener scrollTriggerListener = new WebViewScrollTriggerListener();
 
     private CommunicationBridge bridge;
     private LinkHandler linkHandler;
@@ -418,6 +420,7 @@ public class PageFragment extends Fragment implements BackPressedHandler {
                 pageScrollFunnel.onPageScrolled(oldScrollY, scrollY, isHumanScroll);
             }
         });
+        webView.addOnContentHeightChangedListener(scrollTriggerListener);
         webView.setWebViewClient(new OkHttpWebViewClient() {
             @NonNull @Override public PageViewModel getModel() {
                 return model;
@@ -611,7 +614,8 @@ public class PageFragment extends Fragment implements BackPressedHandler {
         this.pageRefreshed = isRefresh;
 
         closePageScrollFunnel();
-        pageFragmentLoadState.load(pushBackStack, stagedScrollY);
+        pageFragmentLoadState.load(pushBackStack);
+        scrollTriggerListener.setStagedScrollY(stagedScrollY);
         bottomContentView.hide();
         updateBookmarkAndMenuOptions();
     }
@@ -670,6 +674,7 @@ public class PageFragment extends Fragment implements BackPressedHandler {
         } else if (requestCode == Constants.ACTIVITY_REQUEST_DESCRIPTION_EDIT
                 && resultCode == RESULT_OK) {
             refreshPage();
+            AddTitleDescriptionsActivity.Companion.maybeShowEditUnlockDialog(requireActivity());
         }
     }
 
@@ -1017,7 +1022,7 @@ public class PageFragment extends Fragment implements BackPressedHandler {
             startActivityForResult(DescriptionEditTutorialActivity.newIntent(requireContext()),
                     Constants.ACTIVITY_REQUEST_DESCRIPTION_EDIT_TUTORIAL);
         } else {
-            startActivityForResult(DescriptionEditActivity.newIntent(requireContext(), getTitle()),
+            startActivityForResult(DescriptionEditActivity.newIntent(requireContext(), getTitle(), false),
                     Constants.ACTIVITY_REQUEST_DESCRIPTION_EDIT);
         }
     }
@@ -1231,6 +1236,22 @@ public class PageFragment extends Fragment implements BackPressedHandler {
             if (avPlayer != null) {
                 avPlayer.stop();
                 updateProgressBar(false, true, 0);
+            }
+        }
+    }
+
+    private class WebViewScrollTriggerListener implements ObservableWebView.OnContentHeightChangedListener {
+        private int stagedScrollY;
+
+        void setStagedScrollY(int stagedScrollY) {
+            this.stagedScrollY = stagedScrollY;
+        }
+
+        @Override
+        public void onContentHeightChanged(int contentHeight) {
+            if (stagedScrollY > 0 && (contentHeight * DimenUtil.getDensityScalar() - webView.getHeight()) > stagedScrollY) {
+                webView.setScrollY(stagedScrollY);
+                stagedScrollY = 0;
             }
         }
     }

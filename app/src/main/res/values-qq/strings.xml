@@ -538,6 +538,7 @@
   <string name="view_featured_article_card_title">Title shown in the Featured Article card in the Explore feed\n{{Identical|Featured article}}</string>
   <string name="view_featured_article_footer_save_button_label">Button label for saving the current featured article to a reading list, if it is not already saved.\n{{Identical|Save}}</string>
   <string name="view_featured_article_footer_saved_button_label">Button label for when the current featured article is already saved to a reading list, but may now be removed from the list, or saved to a different list.\n{{Identical|Saved}}</string>
+  <string name="edit_tasks_activity_title">Title shown at the top of the activity for unlocking editing tasks.</string>
   <string name="feed_configure_activity_title">Title shown at the top of the screen where the user customizes which cards are shown in the Explore feed.</string>
   <string name="feed_configure_menu_reset">Menu label for resetting the customization of the Explore feed cards to the original defaults.</string>
   <string name="feed_configure_menu_select_all">Menu label for showing all types of Explore feed cards.</string>
@@ -593,6 +594,8 @@
   <string name="description_edit_revert_reason1">Reason for an edit being reverted, because it did not follow the guidelines for descriptions. (Please preserve the anchor tag in its exact form)</string>
   <string name="description_edit_revert_reason2">Reason for an edit being reverted, because it looks like vandalism.</string>
   <string name="description_edit_revert_history">Message that allows the user to go to the edit history associated with the article. (Please preserve the anchor tag in its exact form)</string>
+  <string name="description_edit_task_unlock_title">Title of the dialog box that appears when the user unlocks the feed of suggested articles that need a description to be added.</string>
+  <string name="description_edit_task_unlock_body">Body of the dialog box that appears when the user unlocks the feed of suggested articles that need a description to be added.</string>
   <string name="offline_read_permission_rationale">Message explaining why we need permission to access the device storage when reading articles in offline mode.</string>
   <string name="offline_read_final_rationale">Message explaining why we need permission to access the device storage when reading articles in offline mode.</string>
   <string name="size_gb">Label for showing size in GB. The %.2f is replaced by the number in gigabytes(GB)</string>
@@ -604,6 +607,7 @@
   <string name="onboarding_skip">Button label to skip the current onboarding or tutorial screen.\n{{Identical|Skip}}</string>
   <string name="onboarding_continue">Button label to continue to the next onboarding or tutorial screen.\n{{Identical|Continue}}</string>
   <string name="onboarding_get_started">Button label to finish the current onboarding or tutorial workflow.\n{{Identical|Get started}}</string>
+  <string name="onboarding_maybe_later">Button label to dismiss the current onboarding or tutorial screen without any further action.</string>
   <string name="onboarding_explore_title">Title for a tutorial screen about the Explore feed.</string>
   <string name="onboarding_explore_text">Short explanatory text about the benefits of the Explore feed.\n\n* \"On this day\" is {{Msg-wm|Wikipedia-android-strings-on this day card title}}\n* \"Random\" is {{Msg-wm|Wikipedia-android-strings-app shortcuts random}}</string>
   <string name="onboarding_reading_list_sync_title">Title for a tutorial screen about synchronizing reading lists.</string>
@@ -657,5 +661,24 @@
   <string name="main_drawer_close">Main navigation drawer label for the content description of the close drawable resource.</string>
   <string name="main_drawer_help">Main navigation drawer menu label for accessing the app FAQ.</string>
   <string name="main_drawer_login">Main navigation drawer menu label for logging in or creating an account.</string>
-  <string name="edit_tasks_activity_title">Title shown at the top of the activity for unlocking editing tasks.</string>
+  <string name="title_description_task_title">Title description task heading.</string>
+  <string name="title_description_task_description">Title description task explanation given to user.</string>
+  <string name="image_caption_task_title">Image caption tasks heading.</string>
+  <string name="image_caption_task_description">Image caption tasks explanation given to user.</string>
+  <string name="multilingual_task_title">Multilingual tasks heading.</string>
+  <string name="multilingual_task_description">Multilingual tasks explantion given to user.</string>
+  <string name="image_caption_edit_disable_text">Hint message to users about why the caption tasks are locked and how they can be unlocked by making valid edits. %d is the number of edits.</string>
+  <string name="multilingual_task_negative">Negative action button text for editing tasks.</string>
+  <string name="multilingual_task_positive">Positive action button text for editing tasks.</string>
+  <string name="editing_level_text">Text indicating the level of app editing reached. %d indicates the level number</string>
+  <plurals name="edit_action_contribution_count">
+    <item quantity="one">Text suggesting that one in-app contribution was made.</item>
+    <item quantity="other">Text suggesting that two or more in-app contributions were made.</item>
+  </plurals>
+  <string name="editactionfeed_add_title_descriptions">Title of the add title descriptions page.</string>
+  <string name="editactionfeed_review_title_description">Title of the review title description page.</string>
+  <string name="editactionfeed_add_description_button">A button text for adding description.</string>
+  <string name="editactionfeed_my_contributions">A overflow menu text that leads to my contributions page</string>
+  <string name="editactionfeed_from_language">A label shows that the current selected Wikipedia language for fetching articles.</string>
+  <string name="editactionfeed_add_title_dialog_learn_more">A button text for leading users to the help page of editing title descriptions.</string>
 </resources>
