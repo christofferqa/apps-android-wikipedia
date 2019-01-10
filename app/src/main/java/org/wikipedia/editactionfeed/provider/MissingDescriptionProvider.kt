@@ -1,7 +1,8 @@
 package org.wikipedia.editactionfeed.provider
 
 import android.text.TextUtils
-
+import io.reactivex.Observable
+import io.reactivex.functions.BiFunction
 import org.apache.commons.lang3.StringUtils
 import org.wikipedia.dataclient.Service
 import org.wikipedia.dataclient.ServiceFactory
@@ -10,10 +11,7 @@ import org.wikipedia.dataclient.mwapi.MwQueryPage
 import org.wikipedia.dataclient.mwapi.MwQueryResponse
 import org.wikipedia.dataclient.restbase.page.RbPageSummary
 import org.wikipedia.page.PageTitle
-
-import java.util.ArrayList
-
-import io.reactivex.Observable
+import java.util.*
 
 object MissingDescriptionProvider {
     // TODO: add a maximum-retry limit -- it's currently infinite, or until disposed.
@@ -37,7 +35,7 @@ object MissingDescriptionProvider {
                 .retry { t: Throwable -> t is ListEmptyException }
     }
 
-    fun getNextArticleWithMissingDescription(sourceWiki: WikiSite, targetLang: String, sourceLangMustExist: Boolean): Observable<RbPageSummary> {
+    fun getNextArticleWithMissingDescription(sourceWiki: WikiSite, targetLang: String, sourceLangMustExist: Boolean): Observable<Pair<String, RbPageSummary>> {
         val targetWiki = WikiSite.forLanguageCode(targetLang)
 
         return ServiceFactory.get(sourceWiki).randomWithPageProps
@@ -52,26 +50,34 @@ object MissingDescriptionProvider {
                     ServiceFactory.get(WikiSite(Service.WIKIDATA_URL))
                             .getWikidataLabelsAndDescriptions(StringUtils.join(qNumbers, '|'))
                 }
-                .map<List<PageTitle>> { response ->
-                    val titles = ArrayList<PageTitle>()
+                .map<Pair<String, PageTitle>> { response ->
+                    var sourceDescriptionAndTargetTitle: Pair<String, PageTitle>? = null
                     for (q in response.entities()!!.keys) {
                         val entity = response.entities()!![q]
-                        if (entity == null || !entity.labels().containsKey(sourceWiki.languageCode())
+                        if (entity == null
                                 || entity.descriptions().containsKey(targetLang)
                                 || sourceLangMustExist && !entity.descriptions().containsKey(sourceWiki.languageCode())
                                 || !entity.sitelinks().containsKey(sourceWiki.dbName())
                                 || !entity.sitelinks().containsKey(targetWiki.dbName())) {
                             continue
                         }
-                        titles.add(PageTitle(entity.sitelinks()[targetWiki.dbName()]!!.title, targetWiki))
+                        sourceDescriptionAndTargetTitle = Pair(entity.descriptions()[sourceWiki.languageCode()]!!.value(),
+                                PageTitle(entity.sitelinks()[targetWiki.dbName()]!!.title, targetWiki))
+                        break
                     }
-                    if (titles.isEmpty()) {
+                    if (sourceDescriptionAndTargetTitle == null) {
                         throw ListEmptyException()
                     }
-                    titles
+                    sourceDescriptionAndTargetTitle
                 }
-                .flatMap { titles: List<PageTitle> -> ServiceFactory.getRest(targetWiki).getSummary(null, titles[0].prefixedText) }
+                .flatMap { sourceAndTargetPageTitles: Pair<String, PageTitle> -> getSummary(sourceAndTargetPageTitles) }
                 .retry { t: Throwable -> t is ListEmptyException }
+    }
+
+    private fun getSummary(titles: Pair<String, PageTitle>): Observable<Pair<String, RbPageSummary>> {
+        return Observable.zip(Observable.just(titles.first),
+                ServiceFactory.getRest(titles.second.wikiSite).getSummary(null, titles.second.prefixedText),
+                BiFunction<String, RbPageSummary, Pair<String, RbPageSummary>> { source, target -> Pair(source, target) })
     }
 
     private class ListEmptyException : RuntimeException()

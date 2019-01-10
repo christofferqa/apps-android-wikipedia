@@ -14,6 +14,7 @@
 * Helpau
 * Iluvatar
 * Infovarius
+* Iniquity
 * Irus
 * JackLantern
 * Kaganer
@@ -42,6 +43,7 @@
 * Wirbel78
 * Yuryleb
 * Александр Сигачёв
+* Евгения
 -->
 <resources>
   <string name="app_name_prod">Википедия</string>
@@ -121,8 +123,8 @@
   <string name="edit_section_captcha_message">Для того, что бы помочь нам защититься от автоматизированного спама, пожалуйста, введите слова, которые показаны ниже</string>
   <string name="edit_section_captcha_request_an_account_message">Не видите изображений капчи? &lt;a href=\"https://en.wikipedia.org/wiki/Wikipedia:Request_an_account\"&gt;Запросите учётную запись&lt;/a&gt;</string>
   <string name="edit_section_captcha_hint">Повторите слова, показанные выше</string>
-  <string name="title_captcha">Введите капчу</string>
-  <string name="edit_section_captcha_reload">Коснитесь капчи для её обновления</string>
+  <string name="title_captcha">Введите CAPTCHA</string>
+  <string name="edit_section_captcha_reload">Коснитесь CAPTCHA для её обновления</string>
   <string name="nav_item_login">Войти в Википедию</string>
   <string name="login_username_hint">Имя пользователя</string>
   <string name="login_password_hint">Пароль</string>
@@ -161,7 +163,7 @@
   <string name="create_account_generic_error">Невозможно создать учётную запись</string>
   <string name="create_account_next">Далее</string>
   <string name="email_recommendation_dialog_title">Создать учётную запись без электронного адреса?</string>
-  <string name="email_recommendation_dialog_message">Хотя указание е-мейла опционально, &lt;b&gt;очень  рекомендуется&lt;/b&gt; его указать, поскольку е-мейл используется при восстановлении учётной записи, если вы забудете пароль.</string>
+  <string name="email_recommendation_dialog_message">Хотя указание электронной почты необязательно, но &lt;b&gt;очень  рекомендуется&lt;/b&gt;, поскольку электронная почта используется при восстановлении учётной записи, если вы забудете пароль.</string>
   <string name="email_recommendation_message">Рекомендуется, поскольку электронная почта требуется для восстановления аккаунта.</string>
   <string name="email_recommendation_dialog_create_without_email_action">Продолжить без эл. почты</string>
   <string name="email_recommendation_dialog_create_with_email_action">Добавить адрес эл. почты</string>
@@ -562,6 +564,7 @@
   <string name="view_featured_article_card_title">Избранная статья</string>
   <string name="view_featured_article_footer_save_button_label">Сохранить</string>
   <string name="view_featured_article_footer_saved_button_label">Сохранено</string>
+  <string name="edit_tasks_activity_title">Задачи редактора приложения</string>
   <string name="feed_configure_activity_title">Настроить ленту</string>
   <string name="feed_configure_menu_reset">Восстановить фильтры по умолчанию</string>
   <string name="feed_configure_menu_select_all">Показать все</string>
@@ -612,6 +615,10 @@
   <string name="description_edit_help_tips_example2_hint">краткое описание статьи о горе Эверест</string>
   <string name="description_edit_help_more_info">Подробная информация</string>
   <string name="description_edit_help_meta_info">Описания хранятся в Викиданных (Wikidata) — проекте Фонда Викимедиа, представляющем собой свободную совместно наполняемую  многоязычную основанную на внешних источниках вторичную базу данных для поддержки Википедии и других проектов.</string>
+  <string name="editactionfeed_add_description_button">Добавить описание</string>
+  <string name="editactionfeed_my_contributions">Мой вклад</string>
+  <string name="editactionfeed_from_language">От:</string>
+  <string name="editactionfeed_add_title_dialog_learn_more">Узнать больше</string>
   <string name="description_edit_revert_subtitle">Спасибо за редактирование Википедии!</string>
   <string name="description_edit_revert_intro">Мы знаем, что вы старались, но один из участников заметил что-то неправильное. Возможные причины, почему ваша правка была отменена:</string>
   <string name="description_edit_revert_reason1">ваш вклад не отвечал одному из &lt;a href=\"%1$s\"&gt;руководящих принципов&lt;/a&gt;.</string>
@@ -628,6 +635,7 @@
   <string name="onboarding_skip">Пропустить</string>
   <string name="onboarding_continue">Продолжить</string>
   <string name="onboarding_get_started">Начать</string>
+  <string name="onboarding_maybe_later">Может быть, позже</string>
   <string name="onboarding_explore_title">Новые способы исследований</string>
   <string name="onboarding_explore_text">Путешествуйте по лабиринтам Википедии с помощью постоянно обновляемой ленты. &lt;br/&gt;&lt;b&gt;Настройте&lt;/b&gt; ленту так, чтобы она отвечала вашим интересам — будь то изучение исторических событий, случившихся &lt;b&gt;в этот день&lt;/b&gt;, или положитесь &lt;b&gt;на удачу&lt;/b&gt;.</string>
   <string name="onboarding_reading_list_sync_title">Списки для чтения с синхронизацией</string>
@@ -681,4 +689,8 @@
   <string name="main_drawer_close">Закрыть</string>
   <string name="main_drawer_help">Справка</string>
   <string name="main_drawer_login">Войти в Википедию</string>
+  <string name="multilingual_task_title">Больше задач для редакторов, знающих несколько языков</string>
+  <string name="multilingual_task_description">Задания для перевода доступны, если Вы читаете и пишете на более чем одном языке Wikipedia</string>
+  <string name="multilingual_task_negative">Не для меня</string>
+  <string name="multilingual_task_positive">Добавить языки</string>
 </resources>

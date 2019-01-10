@@ -267,6 +267,7 @@
     <string name="close_all_tabs_confirm_no">No</string>
     <string name="button_close_tab">Close tab</string>
     <string name="tab_item_closed">%s closed.</string>
+    <string name="all_tab_items_closed">All tabs closed.</string>
     <string name="tool_tip_bookmark_icon_title">Add to reading list</string>
     <string name="tool_tip_bookmark_icon_text">Tap on the bookmark icon to save the article to a reading list.</string>
     <string name="tool_tip_share">After highlighting an interesting fact, try sharing it on your favorite networks!</string>
@@ -574,6 +575,7 @@
     <string name="description_edit_text_hint">Title description</string>
     <string name="description_edit_save">Publish</string>
     <string name="description_edit_add_description">Add title description</string>
+    <string name="description_edit_translate_description">Translate title description</string>
     <string name="description_edit_edit_description">Edit description</string>
     <string name="description_edit_cancel_hint">Cancel</string>
     <string name="description_edit_help_title">Help: title descriptions</string>
@@ -620,11 +622,13 @@
 
     <!-- Edit action feed -->
     <string name="editactionfeed_add_title_descriptions">Add title descriptions</string>
+    <string name="editactionfeed_translate_descriptions">Translate title descriptions</string>
     <string name="editactionfeed_review_title_description">Review title description</string>
     <string name="editactionfeed_add_description_button">Add description</string>
     <string name="editactionfeed_my_contributions">My contributions</string>
     <string name="editactionfeed_from_language">From: </string>
     <string name="editactionfeed_add_title_dialog_learn_more">Learn more</string>
+    <string name="editactionfeed_to_language">To: </string>
     <!-- /Edit action feed -->
 
     <!-- Description editing revert help -->
@@ -725,6 +729,7 @@
     <string name="multilingual_task_negative">Not for me</string>
     <string name="multilingual_task_positive">Add languages</string>
     <string name="editing_level_text">LEVEL %d app editor</string>
+    <string name="translation_source_description">%s description:\n</string>
     <plurals name="edit_action_contribution_count">
         <item quantity="one">in-app contribution</item>
         <item quantity="other">in-app contributions</item>

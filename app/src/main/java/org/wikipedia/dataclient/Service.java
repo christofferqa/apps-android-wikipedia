@@ -171,6 +171,13 @@ public interface Service {
     @GET(MW_API_PREFIX + "action=query&generator=random&redirects=1&grnnamespace=0&grnlimit=50&prop=pageprops|description")
     @NonNull Observable<MwQueryResponse> getRandomWithPageProps();
 
+    @GET(MW_API_PREFIX + "action=query&prop=categories&clprop=hidden&cllimit=500")
+    @NonNull Observable<MwQueryResponse> getCategories(@NonNull @Query("titles") String titles);
+
+    @GET(MW_API_PREFIX + "action=query&list=categorymembers&cmlimit=500")
+    @NonNull Observable<MwQueryResponse> getCategoryMembers(@NonNull @Query("cmtitle") String title,
+                                                            @Nullable @Query("cmcontinue") String continueStr);
+
 
     // ------- CSRF, Login, and Create Account -------
 
@@ -291,11 +298,11 @@ public interface Service {
     @Headers("Cache-Control: no-cache")
     @POST(MW_API_PREFIX + "action=wbsetdescription")
     @FormUrlEncoded
-    Call<MwPostResponse> postDescriptionEdit(@NonNull @Field("language") String language,
-                                             @NonNull @Field("uselang") String useLang,
-                                             @NonNull @Field("site") String site,
-                                             @NonNull @Field("title") String title,
-                                             @NonNull @Field("value") String newDescription,
-                                             @NonNull @Field("token") String token,
-                                             @Nullable @Field("assert") String user);
+    Observable<MwPostResponse> postDescriptionEdit(@NonNull @Field("language") String language,
+                                                   @NonNull @Field("uselang") String useLang,
+                                                   @NonNull @Field("site") String site,
+                                                   @NonNull @Field("title") String title,
+                                                   @NonNull @Field("value") String newDescription,
+                                                   @NonNull @Field("token") String token,
+                                                   @Nullable @Field("assert") String user);
 }

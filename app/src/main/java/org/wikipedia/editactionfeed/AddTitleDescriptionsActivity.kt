@@ -19,10 +19,12 @@ class AddTitleDescriptionsActivity : SingleFragmentActivity<AddTitleDescriptions
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         supportActionBar!!.elevation = 0f
+        supportActionBar!!.title = getString(if (intent.getIntExtra(EXTRA_SOURCE, SOURCE_ADD_DESCRIPTIONS) == SOURCE_ADD_DESCRIPTIONS)
+            R.string.editactionfeed_add_title_descriptions else R.string.editactionfeed_translate_descriptions)
     }
 
     override fun createFragment(): AddTitleDescriptionsFragment {
-        return AddTitleDescriptionsFragment.newInstance()
+        return AddTitleDescriptionsFragment.newInstance(intent.getIntExtra(EXTRA_SOURCE, SOURCE_ADD_DESCRIPTIONS))
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -45,8 +47,13 @@ class AddTitleDescriptionsActivity : SingleFragmentActivity<AddTitleDescriptions
     }
 
     companion object {
-        fun newIntent(context: Context): Intent {
+        const val EXTRA_SOURCE = "source"
+        const val SOURCE_ADD_DESCRIPTIONS = 0
+        const val SOURCE_TRANSLATE_DESCRIPTIONS = 1
+
+        fun newIntent(context: Context, source: Int): Intent {
             return Intent(context, AddTitleDescriptionsActivity::class.java)
+                    .putExtra(EXTRA_SOURCE, source)
         }
 
         fun maybeShowEditUnlockDialog(context: Context) {
@@ -61,7 +68,7 @@ class AddTitleDescriptionsActivity : SingleFragmentActivity<AddTitleDescriptions
             AlertDialog.Builder(context)
                     .setCustomTitle(DialogTitleWithImage(context, R.string.description_edit_task_unlock_title, R.drawable.ic_illustration_description_edit_trophy, true))
                     .setMessage(R.string.description_edit_task_unlock_body)
-                    .setPositiveButton(R.string.onboarding_get_started) { _, _ -> context.startActivity(AddTitleDescriptionsActivity.newIntent(context)) }
+                    .setPositiveButton(R.string.onboarding_get_started) { _, _ -> context.startActivity(AddTitleDescriptionsActivity.newIntent(context, SOURCE_ADD_DESCRIPTIONS)) }
                     .setNegativeButton(R.string.onboarding_maybe_later, null)
                     .show()
         }

@@ -93,6 +93,7 @@ import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
 
 import static android.app.Activity.RESULT_OK;
+import static org.wikipedia.descriptions.DescriptionEditTutorialActivity.DESCRIPTION_SELECTED_TEXT;
 import static org.wikipedia.page.PageActivity.ACTION_RESUME_READING;
 import static org.wikipedia.page.PageCacher.loadIntoCache;
 import static org.wikipedia.settings.Prefs.isDescriptionEditTutorialEnabled;
@@ -670,7 +671,7 @@ public class PageFragment extends Fragment implements BackPressedHandler {
         } else if (requestCode == Constants.ACTIVITY_REQUEST_DESCRIPTION_EDIT_TUTORIAL
                 && resultCode == RESULT_OK) {
             Prefs.setDescriptionEditTutorialEnabled(false);
-            startDescriptionEditActivity();
+            startDescriptionEditActivity(data.getStringExtra(DESCRIPTION_SELECTED_TEXT));
         } else if (requestCode == Constants.ACTIVITY_REQUEST_DESCRIPTION_EDIT
                 && resultCode == RESULT_OK) {
             refreshPage();
@@ -843,7 +844,7 @@ public class PageFragment extends Fragment implements BackPressedHandler {
         errorState = false;
 
         model.setCurEntry(new HistoryEntry(model.getTitle(), HistoryEntry.SOURCE_HISTORY));
-        loadPage(model.getTitle(), model.getCurEntry(), false, stagedScrollY, true);
+        loadPage(model.getTitle(), model.getCurEntry(), false, stagedScrollY, app.isOnline());
     }
 
     boolean isLoading() {
@@ -1004,25 +1005,29 @@ public class PageFragment extends Fragment implements BackPressedHandler {
         });
     }
 
-    public void verifyLoggedInThenEditDescription() {
-        if (!AccountUtil.isLoggedIn() && Prefs.getTotalAnonDescriptionsEdited() >= getResources().getInteger(R.integer.description_max_anon_edits)) {
-            new AlertDialog.Builder(requireActivity())
-                    .setMessage(R.string.description_edit_anon_limit)
-                    .setPositiveButton(R.string.menu_login, (DialogInterface dialogInterface, int i) ->
-                            startActivity(LoginActivity.newIntent(requireContext(), LoginFunnel.SOURCE_EDIT)))
-                    .setNegativeButton(android.R.string.cancel, null)
-                    .show();
+    public void verifyBeforeEditingDescription(@Nullable String text) {
+        if (getPage() != null && getPage().getPageProperties().canEdit()) {
+            if (!AccountUtil.isLoggedIn() && Prefs.getTotalAnonDescriptionsEdited() >= getResources().getInteger(R.integer.description_max_anon_edits)) {
+                new AlertDialog.Builder(requireActivity())
+                        .setMessage(R.string.description_edit_anon_limit)
+                        .setPositiveButton(R.string.menu_login, (DialogInterface dialogInterface, int i) ->
+                                startActivity(LoginActivity.newIntent(requireContext(), LoginFunnel.SOURCE_EDIT)))
+                        .setNegativeButton(android.R.string.cancel, null)
+                        .show();
+            } else {
+                startDescriptionEditActivity(text);
+            }
         } else {
-            startDescriptionEditActivity();
+            getEditHandler().showUneditableDialog();
         }
     }
 
-    private void startDescriptionEditActivity() {
+    private void startDescriptionEditActivity(@Nullable String text) {
         if (isDescriptionEditTutorialEnabled()) {
-            startActivityForResult(DescriptionEditTutorialActivity.newIntent(requireContext()),
+            startActivityForResult(DescriptionEditTutorialActivity.newIntent(requireContext(), text),
                     Constants.ACTIVITY_REQUEST_DESCRIPTION_EDIT_TUTORIAL);
         } else {
-            startActivityForResult(DescriptionEditActivity.newIntent(requireContext(), getTitle(), false),
+            startActivityForResult(DescriptionEditActivity.newIntent(requireContext(), getTitle(), text, false, false, null),
                     Constants.ACTIVITY_REQUEST_DESCRIPTION_EDIT);
         }
     }

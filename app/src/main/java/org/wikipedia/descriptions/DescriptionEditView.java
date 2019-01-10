@@ -6,7 +6,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.VisibleForTesting;
 import android.support.design.widget.TextInputLayout;
-import android.text.Html;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.View;
@@ -23,6 +22,7 @@ import org.wikipedia.R;
 import org.wikipedia.dataclient.page.PageSummary;
 import org.wikipedia.page.PageTitle;
 import org.wikipedia.util.FeedbackUtil;
+import org.wikipedia.util.StringUtil;
 import org.wikipedia.views.FaceAndColorDetectImageView;
 
 import butterknife.BindView;
@@ -51,6 +51,8 @@ public class DescriptionEditView extends LinearLayout {
     @Nullable private String originalDescription;
     @Nullable private Callback callback;
     private PageSummary pageSummary;
+    private boolean isTranslationEdit;
+    private CharSequence translationSourceLanguageDescription;
 
     public interface Callback {
         void onSaveClick();
@@ -87,7 +89,7 @@ public class DescriptionEditView extends LinearLayout {
     private void setReviewHeaderText(boolean inReview) {
         int headerTextRes = inReview ? R.string.editactionfeed_review_title_description
                 : TextUtils.isEmpty(originalDescription)
-                ? R.string.description_edit_add_description
+                ? (isTranslationEdit ? R.string.description_edit_translate_description : R.string.description_edit_add_description)
                 : R.string.description_edit_edit_description;
         headerText.setText(getContext().getString(headerTextRes));
     }
@@ -96,7 +98,7 @@ public class DescriptionEditView extends LinearLayout {
         pageSummaryContainer.setVisibility(View.VISIBLE);
         pageImage.loadImage(TextUtils.isEmpty(pageSummary.getThumbnailUrl()) ? null
                 : Uri.parse(pageSummary.getThumbnailUrl()));
-        pageSummaryText.setText(Html.fromHtml(pageSummary.getExtractHtml()));
+        pageSummaryText.setText(isTranslationEdit ? translationSourceLanguageDescription : StringUtil.fromHtml(pageSummary.getExtractHtml()));
         this.pageSummary = pageSummary;
     }
 
@@ -185,6 +187,13 @@ public class DescriptionEditView extends LinearLayout {
         pageDescriptionText.setText(text);
     }
 
+    public void setHighlightText(@Nullable String text) {
+        if (text != null && originalDescription != null) {
+            final int scrollDelayMs = 500;
+            postDelayed(() -> StringUtil.highlightEditText(pageDescriptionText, originalDescription, text), scrollDelayMs);
+        }
+    }
+
     private void init() {
         inflate(getContext(), R.layout.view_description_edit, this);
         ButterKnife.bind(this);
@@ -209,5 +218,13 @@ public class DescriptionEditView extends LinearLayout {
 
     private void showProgressBar(boolean show) {
         progressBar.setVisibility(show ? View.VISIBLE : View.GONE);
+    }
+
+    public void setTranslationEdit(boolean translationEdit) {
+        isTranslationEdit = translationEdit;
+    }
+
+    public void setTranslationSourceLanguageDescription(CharSequence translationSourceLanguageDescription) {
+        this.translationSourceLanguageDescription = translationSourceLanguageDescription;
     }
 }
