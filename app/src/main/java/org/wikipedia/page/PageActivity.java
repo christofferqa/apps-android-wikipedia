@@ -33,8 +33,6 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import net.hockeyapp.android.metrics.MetricsManager;
-
 import org.wikipedia.Constants;
 import org.wikipedia.R;
 import org.wikipedia.WikipediaApp;
@@ -141,7 +139,6 @@ public class PageActivity extends BaseActivity implements PageFragment.Callback,
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         app = (WikipediaApp) getApplicationContext();
-        MetricsManager.register(app);
         app.checkCrashes(this);
         AnimationUtil.setSharedElementTransitions(this);
 
@@ -369,7 +366,9 @@ public class PageActivity extends BaseActivity implements PageFragment.Callback,
             loadPageInForegroundTab(title, historyEntry);
         } else if (intent.hasExtra(Constants.INTENT_FEATURED_ARTICLE_FROM_WIDGET)) {
             new IntentFunnel(app).logFeaturedArticleWidgetTap();
-            loadMainPageInForegroundTab();
+            PageTitle title = intent.getParcelableExtra(EXTRA_PAGETITLE);
+            HistoryEntry historyEntry = new HistoryEntry(title, HistoryEntry.SOURCE_WIDGET);
+            loadPageInForegroundTab(title, historyEntry);
         } else {
             loadMainPageInCurrentTab();
         }
@@ -671,7 +670,6 @@ public class PageActivity extends BaseActivity implements PageFragment.Callback,
     protected void onResume() {
         super.onResume();
         app.resetWikiSite();
-        app.getSessionFunnel().touchSession();
     }
 
     @Override
@@ -714,12 +712,6 @@ public class PageActivity extends BaseActivity implements PageFragment.Callback,
 
     private void handleLangLinkOrPageResult(final Intent data) {
         toolbarContainerView.post(() -> handleIntent(data));
-    }
-
-    @Override
-    protected void onStop() {
-        app.getSessionFunnel().persistSession();
-        super.onStop();
     }
 
     @Override

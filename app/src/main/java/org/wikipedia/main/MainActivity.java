@@ -68,6 +68,7 @@ public class MainActivity extends SingleFragmentActivity<MainFragment>
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        WikipediaApp.getInstance().checkCrashes(this);
         ButterKnife.bind(this);
         AnimationUtil.setSharedElementTransitions(this);
 
@@ -113,6 +114,7 @@ public class MainActivity extends SingleFragmentActivity<MainFragment>
         super.onResume();
         // update main nav drawer after rotating screen
         drawerView.updateState();
+        setUpHomeMenuIcon();
     }
 
     @LayoutRes

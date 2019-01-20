@@ -172,6 +172,9 @@
   <string name="edit_next">Weider</string>
   <string name="edit_done">Verëffentlechen</string>
   <string name="edit_preview">Kucken ouni ze späicheren</string>
+  <string name="edit_undo">Réckgängeg maachen</string>
+  <string name="edit_redo">Widderhuelen</string>
+  <string name="edit_zoom_out"> Verklengeren</string>
   <string name="edit_summary_tag_typo">Tippfeeler verbessert</string>
   <string name="edit_summary_tag_grammar">Grammaire verbessert</string>
   <string name="edit_summary_tag_links">Dobäigesat Linken</string>
@@ -488,6 +491,7 @@
   <string name="editactionfeed_add_title_descriptions">Beschreiwunge vun den Titelen derbäisetzen</string>
   <string name="editactionfeed_add_description_button">Beschreiwung derbäisetzen</string>
   <string name="editactionfeed_add_title_dialog_learn_more">Fir méi ze wëssen</string>
+  <string name="editactionfeed_to_language">Fir:</string>
   <string name="description_edit_revert_subtitle">Merci fir d\'Änneren op Wikipedia!</string>
   <string name="description_edit_revert_reason2">Är Kontributioun gesäit aus wéi en Experiment oder Vandalismus.</string>
   <string name="description_edit_revert_history">Wann Dir interesséiert sidd da kuckt d\'&lt;a href=\"%1$s\"&gt;Lëscht vun de Versiounen&lt;/a&gt;.</string>
@@ -546,4 +550,5 @@
   <string name="main_drawer_help">Hëllef</string>
   <string name="multilingual_task_negative">Net fir mech</string>
   <string name="multilingual_task_positive">Sproochen derbäisetzen</string>
+  <string name="translation_source_description">%s Beschreiwung:</string>
 </resources>

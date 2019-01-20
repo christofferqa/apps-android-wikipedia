@@ -287,6 +287,7 @@
   <string name="close_all_tabs_confirm_no">No</string>
   <string name="button_close_tab">Cerrar pestaña</string>
   <string name="tab_item_closed">%s cerradas.</string>
+  <string name="all_tab_items_closed">Se cerraron todas las pestañas.</string>
   <string name="tool_tip_bookmark_icon_title">Añadir a una lista de lectura</string>
   <string name="tool_tip_bookmark_icon_text">Toca el icono de marcadores para guardar el artículo en una lista de lectura.</string>
   <string name="tool_tip_share">Después de resaltar un hecho interesante, prueba compartirlo en tus redes favoritas.</string>
@@ -605,6 +606,7 @@
   <string name="editactionfeed_my_contributions">Mis contribuciones</string>
   <string name="editactionfeed_from_language">De:</string>
   <string name="editactionfeed_add_title_dialog_learn_more">Más información</string>
+  <string name="editactionfeed_to_language">A:</string>
   <string name="description_edit_revert_subtitle">¡Gracias por editar Wikipedia!</string>
   <string name="description_edit_revert_intro">Sabemos intentaste hacer lo mejor, pero uno de los revisores tuvo una preocupación. Posibles razones por las que tu edición se revirtió incluyen:</string>
   <string name="description_edit_revert_reason1">tu contribución no siguió algunas de las &lt;a href=\"%1$s\"&gt;directrices&lt;/a&gt;.</string>
@@ -677,6 +679,8 @@
   <string name="main_drawer_login">Iniciar sesión / unirse a Wikipedia</string>
   <string name="title_description_task_title">Añadir descripciones de título</string>
   <string name="image_caption_task_description">Añadir títulos a imágenes</string>
+  <string name="multilingual_task_title">Más tareas para editores plurilingües</string>
   <string name="multilingual_task_negative">No para mí</string>
   <string name="multilingual_task_positive">Añadir idiomas</string>
+  <string name="translation_source_description">Descripción en %s:</string>
 </resources>

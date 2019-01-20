@@ -184,9 +184,9 @@ dependencies {
     // use http://gradleplease.appspot.com/ or http://search.maven.org/.
     // Debug with ./gradlew -q app:dependencies --configuration compile
 
-    String okHttpVersion = '3.11.0'
+    String okHttpVersion = '3.12.1'
     String supportVersion = '28.0.0'
-    String retrofitVersion = '2.4.0'
+    String retrofitVersion = '2.5.0'
     String espressoVersion = '3.0.1'
     String butterKnifeVersion = '8.8.1'
     String frescoVersion = '1.11.0' // When updating this version, resync file copies under app/src/main/java/com/facebook
@@ -226,8 +226,9 @@ dependencies {
     implementation "io.reactivex.rxjava2:rxandroid:2.1.0"
     implementation 'com.getkeepsafe.taptargetview:taptargetview:1.12.0'
     implementation "com.jakewharton:butterknife:$butterKnifeVersion"
-    implementation "com.mapbox.mapboxsdk:mapbox-android-sdk:6.6.2"
-    implementation 'net.hockeyapp.android:HockeySDK:5.1.0'
+    implementation "com.mapbox.mapboxsdk:mapbox-android-sdk:7.0.1"
+    implementation 'com.mapbox.mapboxsdk:mapbox-android-plugin-annotation-v7:0.4.0'
+    implementation 'net.hockeyapp.android:HockeySDK:5.1.1'
     implementation 'org.apache.commons:commons-lang3:3.8.1'
     implementation 'org.jsoup:jsoup:1.11.3'
 

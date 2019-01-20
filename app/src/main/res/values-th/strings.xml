@@ -2,6 +2,7 @@
 <!-- Authors:
 * Aefgh39622
 * Ans
+* B20180
 * Bluegram
 * CodeNameBOSS
 * Geonuch
@@ -149,6 +150,10 @@
   <string name="edit_next">ถัดไป</string>
   <string name="edit_done" fuzzy="true">บันทึก</string>
   <string name="edit_preview">แสดงตัวอย่าง</string>
+  <string name="edit_undo">เลิกทำ</string>
+  <string name="edit_redo">ทำซ้ำ</string>
+  <string name="edit_zoom_in">ซูมเข้า</string>
+  <string name="edit_zoom_out">ซูมออก</string>
   <string name="edit_summary_tag_typo">แก้ไขการสะกด</string>
   <string name="edit_summary_tag_grammar">แก้ไขไวยากรณ์</string>
   <string name="edit_summary_tag_links">เพิ่มลิงก์</string>
@@ -177,6 +182,7 @@
   <string name="menu_close_all_tabs">ปิดแท็บทั้งหมด</string>
   <string name="close_all_tabs_confirm">คุณแน่ใจว่าต้องการปิดแท็บทั้งหมด?</string>
   <string name="button_close_tab">ปิดแท็บ</string>
+  <string name="all_tab_items_closed">ปิดแท็บทั้งหมดแล้ว</string>
   <string name="page_view_in_browser">ดูหน้าในเบราว์เซอร์</string>
   <string name="tool_tip_lang_button">คุณสามารถค้นหาและอ่านในวิกิพีเดียหลายภาษาในแอปได้แล้ว\n\n\nแตะบนไอคอนเพื่อเพิ่มภาษาเพิ่มเติม</string>
   <string name="error_unknown">เกิดข้อผิดพลาดไม่ทราบสาเหตุ</string>
@@ -241,6 +247,8 @@
     <item quantity="other">%d วันที่ผ่านมา</item>
   </plurals>
   <string name="view_continue_reading_card_subtitle_today">วันนี้</string>
+  <string name="editactionfeed_translate_descriptions">แปลคำอธิบายชื่อเรื่อง</string>
+  <string name="editactionfeed_to_language">ถึง:</string>
   <string name="onboarding_skip">ข้าม</string>
   <string name="onboarding_explore_title">วิธีใหม่ในการสำรวจ</string>
   <string name="onboarding_analytics_title">ส่งข้อมูลแบบไม่ระบุตัวตน</string>
@@ -258,4 +266,15 @@
   </plurals>
   <string name="wikipedia_languages_remove_dialog_content">คุณจะเห็นเฉพาะเนื้อหาที่อยู่บนฟีดสำรวจและตัวกรองการค้นหาแบบด่วนสำหรับภาษาวิกิพีเดียที่เหลือเท่านั้น</string>
   <string name="add_wikipedia_languages_text">เพิ่มภาษาของวิกิพีเดีย</string>
+  <string name="translation_task_title">แปลคำอธิบายหัวข้อ</string>
+  <string name="translation_task_description">แปลคำอธิบายหัวข้อเป็นภาษาอื่น</string>
+  <string name="translate_description_edit_disable_text">ล็อกไว้จนกว่าคุณจะได้แก้ไข %d คำอธิบายหัวข้อ</string>
+  <string name="translation_source_description">ลักษณะ %s:</string>
+  <string name="translate_caption_task_title">แปลคำบรรยายภาพ</string>
+  <string name="translate_caption_task_description">แปลคำบรรยายเป็นภาษาอื่น</string>
+  <string name="add_title_descriptions_dialog_title">เพิ่มคำอธิบายหัวข้อ</string>
+  <string name="add_title_descriptions_dialog_message">ตอนนี้คุณสามารถช่วยปรับปรุงวิกิพีเดียโดยการเพิ่มคำอธิบายที่ปรากฏด้านล่างหัวข้อในบทความ คุณสามารถกำหนดค่าภาษาของคุณได้ตลอดเวลา</string>
+  <string name="add_translate_descriptions_dialog_title">คุณกำลังแปลคำอธิบายหัวข้อเป็นครั้งแรก</string>
+  <string name="description_edit_tutorial_message">ยินดีต้อนรับสู่บ้านใหม่สำหรับการแก้ไขในแอปบนวิกิพีเดีย ที่นี่เราจะแนะนำโอกาสในการเพิ่มเนื้อหาที่อาจเป็นที่สนใจแก่คุณ การช่วยเหลือของคุณได้รับการชื่นชมมาก ขอให้มีความสุขในการแก้ไข !</string>
+  <string name="translation_description_edit_task_unlock_title">การแปลคำอธิบายหัวข้อได้รับการปลดล็อกแล้ว !</string>
 </resources>

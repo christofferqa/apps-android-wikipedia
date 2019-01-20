@@ -204,6 +204,10 @@
   <string name="edit_next">Další</string>
   <string name="edit_done">Zveřejnit</string>
   <string name="edit_preview">Náhled</string>
+  <string name="edit_undo">Vrátit</string>
+  <string name="edit_redo">Znovu</string>
+  <string name="edit_zoom_in">Přiblížit</string>
+  <string name="edit_zoom_out">Oddálit</string>
   <string name="edit_summary_tag_typo">Opraven překlep</string>
   <string name="edit_summary_tag_grammar">Oprava pravopisu</string>
   <string name="edit_summary_tag_links">Přidány odkazy</string>
@@ -272,6 +276,7 @@
   <string name="close_all_tabs_confirm_no">Ne</string>
   <string name="button_close_tab">Zavřít záložku</string>
   <string name="tab_item_closed">%s zavřena.</string>
+  <string name="all_tab_items_closed">Všechny záložky zavřeny.</string>
   <string name="tool_tip_bookmark_icon_title">Přidat do seznamu k přečtení</string>
   <string name="tool_tip_bookmark_icon_text">Klepnutím na ikonu záložek uložíte článek do seznamu k přečtení.</string>
   <string name="tool_tip_share">Po zvýraznění zajímavého faktu jej zkuste sdílet na své oblíbené síti!</string>
@@ -324,7 +329,7 @@
   <string name="crash_report_quit">Ukončit</string>
   <string name="article_menu_bar_bookmark">Přidat tento článek do seznamu k přečtení</string>
   <string name="article_menu_bar_share">Sdílet odkaz na článek</string>
-  <string name="article_header_edit_hint">Upravit…</string>
+  <string name="article_header_edit_hint">Editovat…</string>
   <string name="article_header_edit_description">Upravit popis článku</string>
   <string name="article_header_edit_lead_section">Upravit úvod</string>
   <string name="color_theme_select">Vzhled</string>
@@ -493,7 +498,7 @@
   <string name="notifications_poll_enable_positive">Zapnout</string>
   <string name="notifications_poll_enable_negative">Teď ne</string>
   <string name="notifications_empty_message">Přečetli jste si všechna upozornění!</string>
-  <string name="notifications_view_archived_button_text">Zobrazit archivované upozornění</string>
+  <string name="notifications_view_archived_button_text">Zobrazit přečtené upozornění</string>
   <string name="notification_preferences_title">Nastavení upozornění</string>
   <string name="notifications_mark_unread">Označit jako nepřečtené</string>
   <string name="preference_title_notification_poll">Kontrola nových upozornění</string>
@@ -590,11 +595,13 @@
   <string name="description_edit_help_more_info">Více informací</string>
   <string name="description_edit_help_meta_info">Popisy jsou uložené ve Wikidatech, projektu &lt;a href=\"http://cs.m.wikipedia.org/wiki/Nadace_Wikimedia\"&gt;nadace Wikimedia&lt;/a&gt;, který poskytuje svobodnou, společně vytvářenou, vícejazyčnou sekundární databázi podporující Wikipedii a další projekty.</string>
   <string name="editactionfeed_add_title_descriptions">Přidat popis článku</string>
+  <string name="editactionfeed_translate_descriptions">Překládat popisy članků</string>
   <string name="editactionfeed_review_title_description">Náhled popisu článku</string>
   <string name="editactionfeed_add_description_button">Přidat popis</string>
   <string name="editactionfeed_my_contributions">Mé příspěvky</string>
   <string name="editactionfeed_from_language">Jazyk:</string>
   <string name="editactionfeed_add_title_dialog_learn_more">Další informace</string>
+  <string name="editactionfeed_to_language">Do:</string>
   <string name="description_edit_revert_subtitle">Děkujeme za editaci Wikipedie!</string>
   <string name="description_edit_revert_intro">Víme, že jste se snažili o to nejlepší, ale jeden z wikipedistů měl obavy. Možné důvody vrácení vaší editace jsou:</string>
   <string name="description_edit_revert_reason1">váš příspěvek nedodržel některé z &lt;a href=\"%1$s\"&gt;pravidel&lt;/a&gt;.</string>
@@ -670,13 +677,26 @@
   <string name="image_caption_task_title">Popisy obrázků</string>
   <string name="image_caption_task_description">Přidat popisy k obrázkům</string>
   <string name="multilingual_task_title">Více úkolů pro vícejazyčné editory</string>
-  <string name="multilingual_task_description">Tipy k překladu jsou k dispozici, pokud čtete a píšete ve více než jednom jazyce Wikipedie.</string>
+  <string name="multilingual_task_description">Tipy k překladu budou k dispozici, pokud čtete a píšete ve více než jednom jazyce Wikipedie.</string>
+  <string name="translation_task_title">Překládat popisy článků</string>
+  <string name="translation_task_description">Přeložit popisy článků do jiných jazyků.</string>
   <string name="image_caption_edit_disable_text">Zamknuto, dokud neprovedete %d ověřených editací v aplikaci</string>
+  <string name="translate_description_edit_disable_text">Zamčeno, dokud neupravíte %d popisů článků</string>
   <string name="multilingual_task_negative">Není pro mě</string>
   <string name="multilingual_task_positive">Přidat jazyky</string>
   <string name="editing_level_text">ÚROVEŇ %d editora z aplikace</string>
+  <string name="translation_source_description">%s popis:</string>
+  <string name="translate_caption_task_title">Překládat popisy obrázků</string>
+  <string name="translate_caption_task_description">Přeložit popisy obrázků do jiných jazyků</string>
   <plurals name="edit_action_contribution_count">
     <item quantity="one">příspěvek v aplikaci</item>
     <item quantity="other">příspěvků v aplikaci</item>
   </plurals>
+  <string name="add_title_descriptions_dialog_title">Přidat popisy článků</string>
+  <string name="add_title_descriptions_dialog_message">Nyní můžete pomoci zlepšit Wikipedii přidáním popisů, které se zobrazují pod názvy článků. Vaše jazyky si můžete kdykoli nakonfigurovat.</string>
+  <string name="add_translate_descriptions_dialog_title">Poprvé překládáte popisy článků</string>
+  <string name="add_translate_descriptions_dialog_message">Nyní můžete zlepšit Wikipedii překladem popisů článků. Můžete si nakonfigurovat jazyky a kdykoli změnit směr překladu.</string>
+  <string name="description_edit_tutorial_message">Vítejte v novém domově pro editaci Wikipedie v aplikaci. Zde vám navrhneme příležitosti přidat obsah, který by vás mohl zajímat. Vaše příspěvky jsou velmi oceňovány. \nHodně štěstí!</string>
+  <string name="translation_description_edit_task_unlock_title">Překládání popisů článků bylo odemčeno!</string>
+  <string name="translation_description_edit_task_unlock_body">Všimli jsme si, že máte rádi editaci popisů článků a čtení Wikipedie ve více jazycích. \nPodívejte se na tento seznam úkolů, který poskytuje přístup k překladu více popisů článků!</string>
 </resources>

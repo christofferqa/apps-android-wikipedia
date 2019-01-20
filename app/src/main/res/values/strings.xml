@@ -198,6 +198,10 @@
     <string name="edit_next">Next</string>
     <string name="edit_done">Publish</string>
     <string name="edit_preview">Preview</string>
+    <string name="edit_undo">Undo</string>
+    <string name="edit_redo">Redo</string>
+    <string name="edit_zoom_in">Zoom in</string>
+    <string name="edit_zoom_out">Zoom out</string>
     <string name="edit_summary_tag_typo">Fixed typo</string>
     <string name="edit_summary_tag_grammar">Fixed grammar</string>
     <string name="edit_summary_tag_links">Added links</string>
@@ -575,7 +579,6 @@
     <string name="description_edit_text_hint">Title description</string>
     <string name="description_edit_save">Publish</string>
     <string name="description_edit_add_description">Add title description</string>
-    <string name="description_edit_translate_description">Translate title description</string>
     <string name="description_edit_edit_description">Edit description</string>
     <string name="description_edit_cancel_hint">Cancel</string>
     <string name="description_edit_help_title">Help: title descriptions</string>
@@ -725,13 +728,25 @@
     <string name="image_caption_task_description">Add captions to images</string>
     <string name="multilingual_task_title">More tasks for multilingual editors</string>
     <string name="multilingual_task_description">Translation tasks are available if you read and write in more than one Wikipedia language.</string>
+    <string name="translation_task_title">Translate title descriptions</string>
+    <string name="translation_task_description">Translate title descriptions into other languages.</string>
     <string name="image_caption_edit_disable_text">Locked until you’ve made %d verified in-app edits</string>
+    <string name="translate_description_edit_disable_text">Locked until you’ve edited %d title descriptions</string>
     <string name="multilingual_task_negative">Not for me</string>
     <string name="multilingual_task_positive">Add languages</string>
     <string name="editing_level_text">LEVEL %d app editor</string>
     <string name="translation_source_description">%s description:\n</string>
+    <string name="translate_caption_task_title">Translate image captions</string>
+    <string name="translate_caption_task_description">Translate captions into other languages</string>
     <plurals name="edit_action_contribution_count">
         <item quantity="one">in-app contribution</item>
         <item quantity="other">in-app contributions</item>
     </plurals>
+    <string name="add_title_descriptions_dialog_title">Add title descriptions</string>
+    <string name="add_title_descriptions_dialog_message">You can now help to improve Wikipedia by adding descriptions that appear below titles in articles. You can configure your languages at any time.</string>
+    <string name="add_translate_descriptions_dialog_title">You are translating title descriptions for the first time</string>
+    <string name="add_translate_descriptions_dialog_message">You can now help to improve Wikipedia by translating title descriptions. You can configure your languages and set a translation direction at any time.</string>
+    <string name="description_edit_tutorial_message">Welcome to the new home for in-app editing on Wikipedia. Here we will suggest opportunities to add content that might be of interest to you. Your contributions are much appreciated. Happy editing!</string>
+    <string name="translation_description_edit_task_unlock_title">Translating title descriptions editing has been unlocked!</string>
+    <string name="translation_description_edit_task_unlock_body">We’ve noticed you like editing title descriptions and read Wikipedia in multiple languages. Check out this task list which gives access to translating more title descriptions!</string>
 </resources>

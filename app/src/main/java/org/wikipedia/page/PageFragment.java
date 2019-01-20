@@ -674,8 +674,8 @@ public class PageFragment extends Fragment implements BackPressedHandler {
             startDescriptionEditActivity(data.getStringExtra(DESCRIPTION_SELECTED_TEXT));
         } else if (requestCode == Constants.ACTIVITY_REQUEST_DESCRIPTION_EDIT
                 && resultCode == RESULT_OK) {
-            refreshPage();
             AddTitleDescriptionsActivity.Companion.maybeShowEditUnlockDialog(requireActivity());
+            refreshPage();
         }
     }
 
@@ -1027,7 +1027,7 @@ public class PageFragment extends Fragment implements BackPressedHandler {
             startActivityForResult(DescriptionEditTutorialActivity.newIntent(requireContext(), text),
                     Constants.ACTIVITY_REQUEST_DESCRIPTION_EDIT_TUTORIAL);
         } else {
-            startActivityForResult(DescriptionEditActivity.newIntent(requireContext(), getTitle(), text, false, false, null),
+            startActivityForResult(DescriptionEditActivity.newIntent(requireContext(), getTitle(), text, false, DescriptionEditActivity.PAGE_SOURCE, null),
                     Constants.ACTIVITY_REQUEST_DESCRIPTION_EDIT);
         }
     }

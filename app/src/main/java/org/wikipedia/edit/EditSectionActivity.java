@@ -17,7 +17,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -43,10 +42,12 @@ import org.wikipedia.login.LoginClient;
 import org.wikipedia.page.LinkMovementMethodExt;
 import org.wikipedia.page.PageProperties;
 import org.wikipedia.page.PageTitle;
+import org.wikipedia.settings.Prefs;
 import org.wikipedia.util.FeedbackUtil;
 import org.wikipedia.util.ResourceUtil;
 import org.wikipedia.util.StringUtil;
 import org.wikipedia.util.log.L;
+import org.wikipedia.views.PlainPasteEditText;
 import org.wikipedia.views.ViewAnimations;
 import org.wikipedia.views.WikiErrorView;
 
@@ -68,9 +69,10 @@ public class EditSectionActivity extends BaseActivity {
     public static final String EXTRA_PAGE_PROPS = "org.wikipedia.edit_section.pageprops";
     public static final String EXTRA_HIGHLIGHT_TEXT = "org.wikipedia.edit_section.highlight";
 
-    @BindView(R.id.edit_section_text) EditText sectionText;
+    @BindView(R.id.edit_section_text) PlainPasteEditText sectionText;
     @BindView(R.id.edit_section_load_progress) View sectionProgress;
-    @BindView(R.id.edit_section_container) ScrollView sectionContainer;
+    @BindView(R.id.edit_section_container) View sectionContainer;
+    @BindView(R.id.edit_section_scroll) ScrollView sectionScrollView;
     @BindView(R.id.view_edit_section_error) WikiErrorView errorView;
     @BindView(R.id.edit_section_abusefilter_container) View abusefilterContainer;
     @BindView(R.id.edit_section_abusefilter_image) ImageView abuseFilterImage;
@@ -150,9 +152,9 @@ public class EditSectionActivity extends BaseActivity {
         }
 
         syntaxHighlighter = new SyntaxHighlighter(this, sectionText);
-        sectionContainer.setSmoothScrollingEnabled(false);
+        sectionScrollView.setSmoothScrollingEnabled(false);
 
-        captchaHandler = new CaptchaHandler(this, title.getWikiSite(), progressDialog, sectionContainer, "", null);
+        captchaHandler = new CaptchaHandler(this, title.getWikiSite(), progressDialog, sectionText, "", null);
 
         editPreviewFragment = (EditPreviewFragment) getSupportFragmentManager().findFragmentById(R.id.edit_section_preview_fragment);
         editSummaryFragment = (EditSummaryFragment) getSupportFragmentManager().findFragmentById(R.id.edit_section_summary_fragment);
@@ -194,6 +196,8 @@ public class EditSectionActivity extends BaseActivity {
         }
 
         sectionText.addTextChangedListener(textWatcher);
+
+        updateTextSize();
 
         // set focus to the EditText, but keep the keyboard hidden until the user changes the cursor location:
         sectionText.requestFocus();
@@ -470,6 +474,20 @@ public class EditSectionActivity extends BaseActivity {
             case R.id.menu_save_section:
                 clickNextButton();
                 return true;
+            case R.id.menu_edit_undo:
+                sectionText.undo();
+                return true;
+            case R.id.menu_edit_redo:
+                sectionText.redo();
+                return true;
+            case R.id.menu_edit_zoom_in:
+                Prefs.setEditingTextSizeExtra(Prefs.getEditingTextSizeExtra() + 1);
+                updateTextSize();
+                return true;
+            case R.id.menu_edit_zoom_out:
+                Prefs.setEditingTextSizeExtra(Prefs.getEditingTextSizeExtra() - 1);
+                updateTextSize();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -480,6 +498,10 @@ public class EditSectionActivity extends BaseActivity {
         getMenuInflater().inflate(R.menu.menu_edit_section, menu);
         MenuItem item = menu.findItem(R.id.menu_save_section);
         item.setTitle(getString(editPreviewFragment.isActive() ? R.string.edit_done : R.string.edit_next));
+        menu.findItem(R.id.menu_edit_zoom_in).setVisible(!editPreviewFragment.isActive());
+        menu.findItem(R.id.menu_edit_zoom_out).setVisible(!editPreviewFragment.isActive());
+        menu.findItem(R.id.menu_edit_undo).setVisible(!editPreviewFragment.isActive());
+        menu.findItem(R.id.menu_edit_redo).setVisible(!editPreviewFragment.isActive());
 
         if (abusefilterEditResult != null) {
             item.setEnabled(abusefilterEditResult.getType() != EditAbuseFilterResult.TYPE_ERROR);
@@ -511,6 +533,11 @@ public class EditSectionActivity extends BaseActivity {
         outState.putParcelable("abusefilter", abusefilterEditResult);
         outState.putBoolean("sectionTextModified", sectionTextModified);
         captchaHandler.saveState(outState);
+    }
+
+    private void updateTextSize() {
+        int extra = Prefs.getEditingTextSizeExtra();
+        sectionText.setTextSize(WikipediaApp.getInstance().getFontSize(getWindow()) + ((float)extra));
     }
 
     private void resetToStart() {
@@ -577,7 +604,7 @@ public class EditSectionActivity extends BaseActivity {
             return;
         }
         sectionText.post(() -> {
-            sectionContainer.fullScroll(View.FOCUS_DOWN);
+            sectionScrollView.fullScroll(View.FOCUS_DOWN);
             final int scrollDelayMs = 500;
             sectionText.postDelayed(() -> StringUtil.highlightEditText(sectionText, sectionWikitext, highlightText), scrollDelayMs);
         });

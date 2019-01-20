@@ -70,9 +70,10 @@ public class MainDrawerView extends ScrollView {
             accountAvatar.setVisibility(View.VISIBLE);
             accountWikiGlobe.setVisibility(View.GONE);
             notificationsContainer.setVisibility(View.VISIBLE);
-            if (ReleaseUtil.isPreBetaRelease()) {
+            if (ReleaseUtil.isPreBetaRelease() && Prefs.isActionEditDescriptionsUnlocked()) {
                 editTasksContainer.setVisibility(VISIBLE);
             }
+            maybeShowIndicatorDots();
         } else {
             accountNameView.setVisibility(GONE);
             loginLogoutButton.setText(getContext().getString(R.string.main_drawer_login));
